@@ -1,0 +1,94 @@
+# =========================
+# 🧱 Compilación .NET
+# =========================
+bin/
+obj/
+
+# =========================
+# 👤 Archivos de usuario
+# =========================
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# =========================
+# 🛠️ IDEs
+# =========================
+.vs/
+.vscode/
+.idea/
+
+# =========================
+# 📦 Node / Frontend
+# =========================
+node_modules/
+wwwroot/**/node_modules/
+
+# (Opcional pero recomendado si usas librerías locales)
+wwwroot/lib/
+
+# =========================
+# 📄 Logs y temporales
+# =========================
+*.log
+*.cache
+*.bak
+*.tmp
+
+# =========================
+# 💻 Sistema operativo
+# =========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# =========================
+# 📦 NuGet
+# =========================
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# =========================
+# 🚀 Publicación
+# =========================
+publish/
+Properties/PublishProfiles/
+
+# =========================
+# 🧪 Testing
+# =========================
+TestResult*/
+
+# =========================
+# ⚙️ Archivos generados
+# =========================
+*.g.cs
+*.g.i.cs
+
+# =========================
+# 🔐 Configuración local
+# =========================
+appsettings.Development.json
+appsettings.*.local.json
+
+# =========================
+# 🌐 ASP.NET generados
+# =========================
+wwwroot/staticwebassets/
+
+# =========================
+# 📦 Node files dentro de wwwroot
+# =========================
+wwwroot/**/package.json
+wwwroot/**/package-lock.json
+
+# =========================
+# 🧹 Otros
+# =========================
+*.dbmdl
+*.pdb
+*.mdb
