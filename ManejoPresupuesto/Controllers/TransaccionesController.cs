@@ -4,6 +4,8 @@ using ManejoPresupuesto.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
+using System.Threading.Tasks;
 
 namespace ManejoPresupuesto.Controllers
 {
@@ -14,12 +16,15 @@ namespace ManejoPresupuesto.Controllers
         private readonly IRepositorioCategorias repositorioCategorias;
         private readonly IRepositorioTransacciones repositorioTransacciones;
         private readonly IMapper mapper;
+        private readonly IServicioReportes servicioReportes;
+
         public TransaccionesController(
             IServicioUsuarios servicioUsuarios,
             IRepositorioCuentas repositorioCuentas,
             IRepositorioCategorias repositorioCategorias,
             IRepositorioTransacciones repositorioTransacciones,
-            IMapper mapper
+            IMapper mapper,
+            IServicioReportes servicioReportes
         )
         {
             this.servicioUsuarios = servicioUsuarios;
@@ -27,11 +32,16 @@ namespace ManejoPresupuesto.Controllers
             this.repositorioCategorias = repositorioCategorias;
             this.repositorioTransacciones = repositorioTransacciones;
             this.mapper = mapper;
+            this.servicioReportes = servicioReportes;
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int mes, int año)
         {
-            return View();
+            var usuarioId = servicioUsuarios.ObtenerUsuarioId();
+
+            var modelo = await servicioReportes
+                .ObtenerReporteTransaccionesDetalladas(usuarioId, mes, año, ViewBag);
+
+            return ViewBag(modelo);
         }
 
         public async Task<IActionResult> Crear()
