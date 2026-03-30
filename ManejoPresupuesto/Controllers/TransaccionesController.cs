@@ -3,6 +3,7 @@ using ManejoPresupuesto.Models;
 using ManejoPresupuesto.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Reflection;
 
 namespace ManejoPresupuesto.Controllers
 {
@@ -151,11 +152,10 @@ namespace ManejoPresupuesto.Controllers
             {
                 return LocalRedirect(modelo.UrlRetorno);
             }
-
         }
 
         [HttpPost]
-        public async Task<IActionResult> Borrar(int id)
+        public async Task<IActionResult> Borrar(int id, string urlRetorno = null)
         {
             var usuarioId = servicioUsuarios.ObtenerUsuarioId();
 
@@ -167,7 +167,15 @@ namespace ManejoPresupuesto.Controllers
             }
 
             await repositorioTransacciones.Borrar(id);
-            return RedirectToAction("Index");
+
+            if (string.IsNullOrEmpty(urlRetorno))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return LocalRedirect(urlRetorno);
+            }
         }
 
         private async Task<IEnumerable<SelectListItem>> ObtenerCuentas(int usuarioId)
