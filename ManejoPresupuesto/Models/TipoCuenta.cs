@@ -12,7 +12,9 @@ namespace ManejoPresupuesto.Models
         //[StringLength(maximumLength: 50, MinimumLength = 3, ErrorMessage = "La longitud del campo {0} debe estar entre {2} y {1}")]
         //[Display(Name = "Nombre del tipo cuenta")]
         [PrimeraLetraMayuscula]
-        [Remote(action: "VerificarExisteTipoCuenta", controller: "TiposCuentas")]
+        // Campos adicionales para la validación remota uso de AdditionalFields
+        // para pasar el Id del tipo de cuenta y evitar que se considere como duplicado al editar
+        [Remote(action: "VerificarExisteTipoCuenta", controller: "TiposCuentas", AdditionalFields = nameof(Id))]
         public string Nombre { get; set; }
         public int UsuarioId { get; set; }
         public int Orden { get; set; }
