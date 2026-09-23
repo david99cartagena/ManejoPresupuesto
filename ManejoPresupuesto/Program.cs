@@ -22,6 +22,7 @@ builder.Services.AddTransient<IRepositorioCuentas, RepositorioCuentas>();
 builder.Services.AddTransient<IRepositorioCategorias, RepositorioCategorias>();
 builder.Services.AddTransient<IRepositorioTransacciones, RepositorioTransacciones>();
 builder.Services.AddTransient<IServicioReportes, ServicioReportes>();
+builder.Services.AddTransient<IServicioEmail, ServicioEmail>();
 builder.Services.AddTransient<IRepositorioUsuarios, RepositorioUsuarios>();
 builder.Services.AddTransient<IUserStore<Usuario>, UsuarioStore>();
 builder.Services.AddTransient<SignInManager<Usuario>>();
@@ -31,7 +32,14 @@ builder.Services.AddIdentityCore<Usuario>(opciones =>
     opciones.Password.RequireLowercase = false;
     opciones.Password.RequireUppercase = false;
     opciones.Password.RequireNonAlphanumeric = false;
-}).AddErrorDescriber<MensajeDeErrorIdentity>();
+}).AddErrorDescriber<MensajeDeErrorIdentity>()
+.AddDefaultTokenProviders();
+
+void AddDefaultTokenProviders()
+{
+    throw new NotImplementedException();
+}
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
