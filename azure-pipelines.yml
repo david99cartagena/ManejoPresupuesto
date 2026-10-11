@@ -64,3 +64,11 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: 'Suscripción de Azure 1(85f66051-7286-49fa-ab45-28524ee4f088)'
+    AuthenticationType: 'connectionString'
+    ConnectionString: '$(connectionstring)'
+    deployType: 'DacpacTask'
+    DeploymentAction: 'Publish'
+    IpDetectionMethod: 'AutoDetect'
