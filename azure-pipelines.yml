@@ -72,3 +72,15 @@ steps:
     deployType: 'DacpacTask'
     DeploymentAction: 'Publish'
     IpDetectionMethod: 'AutoDetect'
+- task: AzureRmWebAppDeployment@5
+  inputs:
+    azureSubscription: 'Suscripción de Azure 1(1)(85f66051-7286-49fa-ab45-28524ee4f088)'
+    AuthenticationType: 'server'
+    ServerName: 'manejopresupuestodbserver564567.database.windows.net'
+    DatabaseName: 'ManejoPresupuesto_db'
+    SqlUsername: '$(SqlUsuario)'
+    SqlPassword: '$(SqlPassword)'
+    deployType: 'DacpacTask'
+    DeploymentAction: 'Publish'
+    DacpacFile: '$(Build.ArtifactStagingDirectory)/db/DB.dacpac'
+    IpDetectionMethod: 'AutoDetect'
