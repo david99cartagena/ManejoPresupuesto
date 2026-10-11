@@ -1,0 +1,65 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  proyectoMVC: 'ManejoPresupuesto/ManejoPresupuesto.csproj'
+  proyectoDB: 'DB/DB.sqlproj'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+
+- task: UseDotNet@2
+  displayName: 'Instalar .NET 10'
+  inputs:
+    packageType: 'sdk'
+    version: '10.0.x'
+
+# El .sqlproj es estilo clasico (SSDT), solo compila con MSBuild de Visual Studio.
+# Se fuerza el proveedor de Azure SQL para que el .dacpac sea compatible con Azure.
+- task: VSBuild@1
+  displayName: 'Compilar proyecto de base de datos'
+  inputs:
+    solution: '$(proyectoDB)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/p:DSP=Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
+
+- task: CopyFiles@2
+  displayName: 'Copiar dacpac'
+  inputs:
+    SourceFolder: 'DB/bin/$(buildConfiguration)'
+    Contents: '**/*.dacpac'
+    flattenFolders: true
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/db'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restaurar paquetes NuGet'
+  inputs:
+    command: 'restore'
+    projects: '$(proyectoMVC)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publicar app MVC'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '$(proyectoMVC)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/webapp --runtime win-x86 --self-contained'
+    zipAfterPublish: false
+    modifyOutputPath: false
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publicar artefactos'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
