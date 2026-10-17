@@ -74,7 +74,7 @@ steps:
     azureSubscription: '$(conexionAzure)'
     AuthenticationType: 'servicePrincipal'
     ServerName: 'manejopresupuestodbserver564567.database.windows.net'
-    DatabaseName: 'ManejoPresupuesto_db'
+    DatabaseName: 'ManejoPresupuesto_free'
     deployType: 'DacpacTask'
     DeploymentAction: 'Publish'
     DacpacFile: '$(Build.ArtifactStagingDirectory)/db/DB.dacpac'
