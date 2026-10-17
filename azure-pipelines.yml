@@ -12,7 +12,8 @@ pool:
 variables:
   proyectoMVC: 'ManejoPresupuesto/ManejoPresupuesto.csproj'
   proyectoDB: 'DB/DB.sqlproj'
-  buildPlatform: 'Any CPU'
+  # Service connection de Azure DevOps (la del service principal a9033cfd)
+  conexionAzure: 'Suscripción de Azure 1(85f66051-7286-49fa-ab45-28524ee4f088)'
   buildConfiguration: 'Release'
 
 steps:
@@ -64,23 +65,27 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+# El servidor SQL solo acepta Entra ID, por eso se usa el service principal
+# de la service connection y no usuario/contrasena de SQL.
 - task: SqlAzureDacpacDeployment@1
+  displayName: 'Desplegar base de datos'
   inputs:
-    azureSubscription: 'Suscripción de Azure 1(85f66051-7286-49fa-ab45-28524ee4f088)'
-    AuthenticationType: 'connectionString'
-    ConnectionString: '$(connectionstring)'
-    deployType: 'DacpacTask'
-    DeploymentAction: 'Publish'
-    IpDetectionMethod: 'AutoDetect'
-- task: AzureRmWebAppDeployment@5
-  inputs:
-    azureSubscription: 'Suscripción de Azure 1(1)(85f66051-7286-49fa-ab45-28524ee4f088)'
-    AuthenticationType: 'server'
+    azureSubscription: '$(conexionAzure)'
+    AuthenticationType: 'servicePrincipal'
     ServerName: 'manejopresupuestodbserver564567.database.windows.net'
     DatabaseName: 'ManejoPresupuesto_db'
-    SqlUsername: '$(SqlUsuario)'
-    SqlPassword: '$(SqlPassword)'
     deployType: 'DacpacTask'
     DeploymentAction: 'Publish'
     DacpacFile: '$(Build.ArtifactStagingDirectory)/db/DB.dacpac'
+    # La base en Azure tiene otra collation que el proyecto: no tocar opciones de la base
+    AdditionalArguments: '/p:ScriptDatabaseOptions=false'
     IpDetectionMethod: 'AutoDetect'
+
+- task: AzureWebApp@1
+  displayName: 'Desplegar app MVC'
+  inputs:
+    azureSubscription: '$(conexionAzure)'
+    appType: 'webApp'
+    appName: 'ManejoPresupuesto20261010214159'
+    package: '$(Build.ArtifactStagingDirectory)/webapp'
