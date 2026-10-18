@@ -92,3 +92,6 @@ wwwroot/**/package-lock.json
 *.dbmdl
 *.pdb
 *.mdb
+
+# Archivo de estado de Visual Studio del proyecto de base de datos
+*.jfm

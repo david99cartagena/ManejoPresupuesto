@@ -75,5 +75,6 @@
     <Build Include="dbo\Stored Procedures\CrearDatosUsuariosNuevo.sql" />
     <Build Include="dbo\Stored Procedures\TiposCuentas_Insertar.sql" />
     <Build Include="dbo\Stored Procedures\Transacciones_Actualizar.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Prueba.sql" />
   </ItemGroup>
 </Project>
